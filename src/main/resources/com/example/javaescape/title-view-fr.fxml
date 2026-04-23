@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<VBox alignment="CENTER" spacing="28.0" styleClass="app-root" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.javaescape.TitleController">
+    <padding>
+        <Insets bottom="24.0" left="24.0" right="24.0" top="24.0"/>
+    </padding>
+    <Label styleClass="screen-title" text="Java Escape"/>
+    <Label maxWidth="460.0" styleClass="subtitle-label" text="Desamorce la menace en repondant correctement a 5 questions." wrapText="true"/>
+    <Button fx:id="startButton" onAction="#onStart" styleClass="primary-button" text="Demarrer la mission"/>
+</VBox>
