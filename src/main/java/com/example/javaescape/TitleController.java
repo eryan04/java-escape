@@ -14,8 +14,9 @@ public class TitleController {
 
     @FXML
     private void onStart() throws IOException {
-        FXMLLoader loader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(HelloApplication.class.getResource("hello-view-fr.fxml"));
         Scene dialogueScene = new Scene(loader.load(), 560, 480);
+        HelloApplication.applyGlobalStyles(dialogueScene);
         Stage stage = (Stage) startButton.getScene().getWindow();
         stage.setTitle("Java Escape - Briefing");
         stage.setScene(dialogueScene);

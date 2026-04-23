@@ -10,19 +10,20 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.util.List;
 
-public class HelloController {
+public class IntermediaryController {
 
     private final List<String> dialogues = List.of(
-            "Écoute-moi bien. Une bombe a été placée quelque part en ville, et tout repose sur toi.\nNous n'avons pas de temps à perdre. Chaque seconde compte.",
-            "Voici la situation : tu vas devoir résoudre une série d'énigmes. Chacune te donnera des indices pour localiser la bombe. Le temps presse, mais nous avons encore une chance si tu agis rapidement et avec précision.",
-            "Je sais que ce n'est pas facile, mais je crois en toi. Nous avons les outils nécessaires, et tu as l'intelligence pour déchiffrer ces énigmes. Chaque réponse correcte nous rapproche de la solution.",
-            "Ne laisse pas la pression te faire trébucher. Résous les énigmes, trouve l'emplacement de la bombe, et nous pourrons la désamorcer avant qu'il ne soit trop tard. On compte sur toi. La ville compte sur toi."
+            "Bien joué. Tu as bien avancé jusqu'ici. Tu as résolu toutes les énigmes, et maintenant, nous avons une meilleure idée de l'endroit où la bombe pourrait être. Mais la tâche n'est pas encore terminée.",
+            "Maintenant, il te faut localiser l'emplacement exact. Pour cela, tu vas interroger des suspects. Certains te diront la vérité, d'autres mentiront. Ce sera à toi de discerner qui est fiable et qui ne l'est pas.",
+            "Le temps presse. Chaque erreur pourrait nous coûter cher, alors fais attention. Nous n'avons pas de marge pour les hésitations. Trouve où elle se cache, et on pourra passer à l'étape suivante.",
+            "Tu es notre seul espoir, et je sais que tu peux le faire. Trouve la bombe, localise-la avec précision. C'est à toi de mener cette mission à bien.",
+            "Allez, il ne reste plus beaucoup de temps. Trouve cette bombe, et sauve tout le monde."
     );
 
     private int currentDialogueIndex = 0;
@@ -33,11 +34,12 @@ public class HelloController {
     @FXML private Label speakerName;
     @FXML private ImageView speakerImage;
     @FXML private Button nextButton;
+    @FXML private VBox endPanel;
 
     @FXML
     private void initialize() {
         speakerImage.setImage(createChefAvatar());
-        // Écoute la touche ESPACE sur la scène dès qu'elle est disponible
+        if (endPanel != null) endPanel.setVisible(false);
         dialogueText.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 newScene.setOnKeyPressed(e -> {
@@ -51,26 +53,20 @@ public class HelloController {
     @FXML
     protected void onNextDialogue() {
         if (isAnimating) {
-            // Premier appui : compléter l'animation instantanément
             finishTypewriterNow();
             return;
         }
         if (currentDialogueIndex < dialogues.size() - 1) {
             currentDialogueIndex++;
             startTypewriter(dialogues.get(currentDialogueIndex));
-            nextButton.setText("Continuer");
         } else {
-            // Dernier dialogue passé : lancer le quiz
-            launchQuiz();
+            showEndPanel();
         }
     }
 
     private void onSpaceKey() {
-        if (isAnimating) {
-            finishTypewriterNow();
-        } else {
-            onNextDialogue();
-        }
+        if (isAnimating) finishTypewriterNow();
+        else onNextDialogue();
     }
 
     private void startTypewriter(String text) {
@@ -88,7 +84,7 @@ public class HelloController {
         }
         typewriterTimeline.setOnFinished(e -> {
             isAnimating = false;
-            nextButton.setText(currentDialogueIndex < dialogues.size() - 1 ? "Continuer" : "Lancer le quiz");
+            nextButton.setText(currentDialogueIndex < dialogues.size() - 1 ? "Continuer" : "Suivant");
         });
         typewriterTimeline.play();
     }
@@ -97,33 +93,36 @@ public class HelloController {
         if (typewriterTimeline != null) typewriterTimeline.stop();
         dialogueText.setText(dialogues.get(currentDialogueIndex));
         isAnimating = false;
-        nextButton.setText(currentDialogueIndex < dialogues.size() - 1 ? "Continuer" : "Lancer le quiz");
+        nextButton.setText(currentDialogueIndex < dialogues.size() - 1 ? "Continuer" : "Suivant");
     }
 
-    private void launchQuiz() {
-        Stage stage = (Stage) nextButton.getScene().getWindow();
-        QuizApp quiz = new QuizApp();
-        quiz.launchQuiz(stage);
+    private void showEndPanel() {
+        // Le démineur n'est pas implémenté — afficher un écran de fin de démo
+        dialogueText.setVisible(false);
+        speakerImage.setVisible(false);
+        if (speakerName != null) speakerName.setVisible(false);
+        nextButton.setVisible(false);
+        if (endPanel != null) endPanel.setVisible(true);
     }
-
 
     private WritableImage createChefAvatar() {
-        Canvas canvas = new Canvas(180, 180);
+        Canvas canvas = new Canvas(160, 160);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         gc.setFill(Color.web("#1f2937"));
-        gc.fillRoundRect(0, 0, 180, 180, 24, 24);
+        gc.fillRoundRect(0, 0, 160, 160, 24, 24);
 
         gc.setFill(Color.web("#f59e0b"));
-        gc.fillOval(68, 42, 44, 44);
+        gc.fillOval(58, 34, 44, 44);
 
         gc.setFill(Color.web("#60a5fa"));
-        gc.fillRoundRect(48, 92, 84, 52, 18, 18);
+        gc.fillRoundRect(38, 84, 84, 50, 18, 18);
 
         gc.setStroke(Color.WHITE);
         gc.setLineWidth(3);
-        gc.strokeLine(60, 134, 120, 134);
+        gc.strokeLine(50, 124, 110, 124);
 
         return canvas.snapshot(null, null);
     }
 }
+
