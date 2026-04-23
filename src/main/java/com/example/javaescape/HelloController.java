@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 import java.util.List;
 
@@ -45,7 +46,15 @@ public class HelloController {
         }
 
         dialogueText.setText("Fin du briefing. Passe a la premiere enigme.");
-        nextButton.setDisable(true);
+        nextButton.setText("Lancer le quizz");
+        nextButton.setDisable(false);
+        nextButton.setOnAction(e -> launchQuiz());
+    }
+    
+    private void launchQuiz() {
+        Stage stage = (Stage) nextButton.getScene().getWindow();
+        QuizApp quiz = new QuizApp();
+        quiz.launchQuiz(stage);
     }
 
     private void showDialogue() {
